@@ -17,6 +17,10 @@ If you want to configure some other output in the right side of the invoice area
 
 A general layout of the $params array is like the array below.  As you can see I added a checkbox for `customfields6` which is just something i set "Approved for PO" and then in the code you will see I check that param and output Authorized.  You will need to verify which field is yours as they dont use any specific `key => value` besdies `customfieldX` with X being the field number.
 
+These should be similar to all values from the registrar docs:
+http://docs.whmcs.com/Gateway_Module_Developer_Docs
+
+
 ```
 Array
 (
