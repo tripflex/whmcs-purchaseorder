@@ -1,9 +1,9 @@
 whmcs-purchaseorder
 ===================
 
-Custom WHMCS Gateway to allow clients to use Purchase Orders
+Custom WHMCS Gateway to allow clients to use Purchase Orders, and Auto Activate products for specific clients based on values of Custom Client Fields.
 
-In order to get this to work correctly you will need to add custom client fields in the backend of WHMCS.
+In order to get this to work correctly you will need to add custom client fields in the backend of WHMCS.  This should be a checkbox (that you can set on admin under client profile) something like "Approved for PO" and "Auto Activate Products"
 
 Go to Setup > Custom Client Fields from admin
 
@@ -11,14 +11,13 @@ Add custom field "Purchase Order #" and check show on invoice, and admin only.
 
 This field will be under the client profile information, you can add a PO # and it will show up on the invoice automatically.  
 
-If you want to configure some other output in the right side of the invoice area (when Purchase Order is selected from dropdown), you can do so in the `purchase_order_link` function.
+If you want to configure some other output in the right side of the invoice area (when Purchase Order is selected from dropdown), you can do so in the configuration of the Purchase Order gateway.  There are two fields, one for approved clients and one for invalid/un-approved clients.  
+
+There will be a dropdown for all custom client fields, select which one you want to use for the auto activate, and the approve to use Purchase Order.  These fields must be checkboxes.
 
 ### `$params` values
 
-A general layout of the $params array is like the array below.  As you can see I added a checkbox for `customfields6` which is just something i set "Approved for PO" and then in the code you will see I check that param and output Authorized.  You will need to verify which field is yours as they dont use any specific `key => value` besdies `customfieldX` with X being the field number.
-
-These should be similar to all values from the registrar docs:
-http://docs.whmcs.com/Gateway_Module_Developer_Docs
+A general layout of the $params array is like the array below.
 
 
 ```
