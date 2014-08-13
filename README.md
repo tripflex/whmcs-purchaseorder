@@ -1,19 +1,22 @@
-whmcs-purchaseorder
+WHMCS Purchase Order Gateway
 ===================
 
-Custom WHMCS Gateway to allow clients to use Purchase Orders, and Auto Activate products for specific clients based on values of Custom Client Fields.
+This is an open source gateway file for WHMCS.  This module will allow you to add an option to your checkout page with "Purchase Order" as an option.  
 
-In order to get this to work correctly you will need to add custom client fields in the backend of WHMCS.  This should be a checkbox (that you can set on admin under client profile) something like "Approved for PO" and "Auto Activate Products"
+This also includes an auto activation option as well.  By using a custom client checkbox field you can configure WHMCS to automatically approve/activate orders if the client has the checkbox enabled under their profile.
 
-Go to Setup > Custom Client Fields from admin
+### Installation
 
-Add custom field "Purchase Order #" and check show on invoice, and admin only.
+Copy the `purchaseorder.php` file to your WHMCS installation under `/modules/gateways/purchaseorder.php`, then go to WHMCS admin and enable Purchase Order as a Gateway.
 
-This field will be under the client profile information, you can add a PO # and it will show up on the invoice automatically.  
+### Initial Setup
 
-If you want to configure some other output in the right side of the invoice area (when Purchase Order is selected from dropdown), you can do so in the configuration of the Purchase Order gateway.  There are two fields, one for approved clients and one for invalid/un-approved clients.  
+To set everything up you will need to create at least 2 custom client fields.  One checkbox (also called tickbox) for **Approved to use Purchase Orders** and another checkbox (tickbox) field for **Auto Order Activation**.
 
-There will be a dropdown for all custom client fields, select which one you want to use for the auto activate, and the approve to use Purchase Order.  These fields must be checkboxes.
+Once you have created those fields go back to the **Gateway Configuration** and select the fields you created from the dropdown menu under the Purchase Order configuration.
+
+Profit!
+
 
 ### Screenshots
 ---
@@ -25,6 +28,8 @@ Purchase Order Gateway Configuration | ![](screenshots/gatewayconfig.png)
 Client Custom Fields | ![](screenshots/customclientfields.png)
 Client Profile Custom Fields | ![](screenshots/clientprofile.png)
 Invoice Page Output | ![](screenshots/invoicepage.png)
+
+For reference here's a `var_dump` of the $param values:
 
 ### `$params` values
 
