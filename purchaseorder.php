@@ -4,7 +4,7 @@
  *
  * @author     Myles McNamara (get@smyl.es)
  * @copyright  Copyright (c) Myles McNamara 2014
- * @date       8/11/14
+ * @date       8/13/14
  * @link       http://smyl.es
  */
 
@@ -36,22 +36,16 @@ function purchaseorder_config() {
 
 function purchaseorder_get_custom_fields(){
 	$options = '';
-	$request  = full_query( "SELECT GROUP_CONCAT(`fieldname` SEPARATOR ',' ) AS `emails` FROM table WHERE id=4 GROUP BY id" );
+	$request  = full_query( "SELECT GROUP_CONCAT(fieldname) FROM tblcustomfields where type='client' GROUP BY type" );
+	$values = mysql_fetch_array( $request );
 
-	while( $data = mysql_fetch_array( $request ) ){
-
-		$options .= $data['fieldname'] . ',';
-
-	}
-
-	return $options;
+	return $values[0];
 
 }
 
 function purchaseorder_accept_order( $orderid ) {
 
 	$command               = "acceptorder";
-	$adminuser             = "admin";
 	$values[ "orderid" ]   = $orderid;
 	$values[ "autosetup" ] = TRUE;
 	$values[ "sendemail" ] = TRUE;
