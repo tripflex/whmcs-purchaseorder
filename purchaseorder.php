@@ -15,14 +15,31 @@ function purchaseorder_config() {
 			"Type"  => "PO",
 			"Value" => "Purchase Order"
 		),
-		"instructions" => array(
-			"FriendlyName" => "Purchase Order Instructions",
+		"approvedforpo" => array(
+			"FriendlyName" => "Approved for PO Message",
 			"Type"         => "textarea",
 			"Rows"         => "5",
-			"Value"        => "",
+			"Value"        => "<strong style=\"color: #008000;\">Verified Account</strong><br />Invoice will be marked as paid when payment is verified for the PO.",
 			"Description"  => "",
 		),
-	    "customfield" => array(
+		"notapprovedforpo" => array(
+			"FriendlyName" => "Not Approved for PO Message",
+			"Type"         => "textarea",
+			"Rows"         => "5",
+			"Value"        => "<strong style=\"color: #BA3832;\">Invalid Account</strong><br />You are not authorized to pay via Purchase Order, please contact support, or choose another payment method.",
+			"Description"  => "",
+		),
+		"verifiedaccountfield" => array(
+			"FriendlyName" => "Approved for PO Client Custom Field",
+			"Type"         => "dropdown",
+			"Description"  => "Select the custom field used to Verify/Approve a client to use Purchase Orders.",
+			"Options"      => purchaseorder_get_custom_fields()
+		),
+		"enableautoactivatefield" => array(
+			"FriendlyName" => "Enable Auto Activate",
+			"Type"         => "yesno"
+		),
+	    "autoactivatefield" => array(
 		    "FriendlyName" => "Auto Activate Client Custom Field",
 	        "Type" => "dropdown",
 	        "Description" => "Select the custom client field used for auto activation",
@@ -69,19 +86,43 @@ function purchaseorder_orderformcheckout( $params ) {
 
 function purchaseorder_link( $params ) {
 
-	/**
-	 * You must set this value below to which custom field you have created and set as the checkbox for the client
-	 * to auto activate.  WHMCS did a shitty job of storing custom field variables so you have to count from the top
-	 * down to the field you added, and that will be the value below.  So if my custom field was the second one from
-	 * the top, it would be the value you see below, customfield2.
-	 */
-	$auto_activate_custom_field = 'customfields2';
-
-	// That's far enough buddy
 	global $CONFIG;
 	$code      = "";
+	$cart_action = filter_input( INPUT_GET, 'a', FILTER_SANITIZE_STRING );
+	$actual_auto_activate_value = array();
+	$actual_verified_account_value = array();
+
 	$sysurl    = ( $CONFIG[ 'SystemSSLURL' ] ? $CONFIG[ 'SystemSSLURL' ] : $CONFIG[ 'SystemURL' ] );
 	$invoiceid = $params[ 'invoiceid' ];
+
+	if( $params['enableautoactivatefield'] == 'on' && ! empty( $params[ 'autoactivatefield' ] ) ){
+
+		$auto_activate_field_label = $params['autoactivatefield'];
+		$auto_activate_query = select_query( 'tblcustomfields', 'id', array( 'fieldname' => $auto_activate_field_label ) );
+		$auto_activate_id = mysql_fetch_array( $auto_activate_query );
+
+	}
+
+	if ( ! empty( $params[ 'verifiedaccountfield' ] ) ) {
+
+		$verified_account_field_label = $params[ 'verifiedaccountfield' ];
+		$verified_account_query       = select_query( 'tblcustomfields', 'id', array( 'fieldname' => $verified_account_field_label ) );
+		$verified_account_id          = mysql_fetch_array( $verified_account_query );
+
+	}
+
+//	echo "AUTO ACTIVATE ID =" . $auto_activate_id;
+//	echo "VERIFIED ACCOUNT ID =" . $verified_account_id;
+
+	foreach ( $params[ 'clientdetails' ][ 'customfields' ] as $customfield ) {
+		if ( $customfield[ 'id' ] == $auto_activate_id[0] ) {
+			$actual_auto_activate_value = $customfield[ 'value' ];
+		}
+
+		if( $customfield[ 'id' ] == $verified_account_id[0] ) {
+			$actual_verified_account_value = $customfield['value'];
+		}
+	}
 
 	$orderid_req  = select_query( 'tblorders', 'id', array( 'invoiceid' => $invoiceid ) );
 	$orderid_data = mysql_fetch_array( $orderid_req );
@@ -89,18 +130,20 @@ function purchaseorder_link( $params ) {
 	if ( ! empty ( $orderid_data[ 'id' ] ) ) $orderid = $orderid_data[ 'id' ];
 
 	// Make sure you set the custom field value above
-	if ( $params[ 'clientdetails' ][ $auto_activate_custom_field ] == 'on' ) {
+	if ( $actual_verified_account_value == 'on' ) {
 
-		$code .= "<strong style=\"color: #008000;\">Verified Account</strong><br />Invoice will be marked as paid when payment is verified for the PO.";
+		$code .= html_entity_decode($params['approvedforpo']);
 
 	} else {
 
-		$code .= "<strong style=\"color: #BA3832;\">Invalid Account</strong><br />You are not authorized to pay via Purchase Order, please contact support, or choose another payment method.";
+		$code .= html_entity_decode($params['notapprovedforpo']);
 
 	}
 
-	if ( $orderid ) purchaseorder_accept_order( $orderid );
-	logModuleCall( 'autoactivate', 'activate', 'accepting order...', $orderid );
+	if( $actual_auto_activate_value == 'on' && ! empty( $orderid ) && $cart_action != 'complete' ){
+		purchaseorder_accept_order( $orderid );
+		logModuleCall( 'autoactivate', 'activate', 'accepting order...', $orderid );
+	}
 
 	// Required to redirect after checking out
 	$code .= "<form method=\"POST\" action=\"{$sysurl}/viewinvoice.php?id={$invoiceid}\">";
