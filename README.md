@@ -16,14 +16,7 @@ If you want to configure some other output in the right side of the invoice area
 There will be a dropdown for all custom client fields, select which one you want to use for the auto activate, and the approve to use Purchase Order.  These fields must be checkboxes.
 
 ### Screenshots
-<table>
-	<td width="50%">
-		![](screenshots/clientprofile.png)
-	</td>
-	<td width="50%">
-		<img src="https://smyl.es/img/Selection-1002x631-11.png" alt="Client Area Affiliates View">
-	</td>
-</table>
+![](screenshots/clientprofile.png)
 
 ### `$params` values
 
