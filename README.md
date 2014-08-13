@@ -6,11 +6,11 @@ This is an open source gateway file for WHMCS.  This module will allow you to ad
 This also includes an auto activation option as well.  By using a custom client checkbox field you can configure WHMCS to automatically approve/activate orders if the client has the checkbox enabled under their profile.
 
 ### Installation
-
+---
 Copy the `purchaseorder.php` file to your WHMCS installation under `/modules/gateways/purchaseorder.php`, then go to WHMCS admin and enable Purchase Order as a Gateway.
 
 ### Initial Setup
-
+---
 To set everything up you will need to create at least 2 custom client fields.  One checkbox (also called tickbox) for **Approved to use Purchase Orders** and another checkbox (tickbox) field for **Auto Order Activation**.
 
 Once you have created those fields go back to the **Gateway Configuration** and select the fields you created from the dropdown menu under the Purchase Order configuration.
