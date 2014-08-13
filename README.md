@@ -17,6 +17,18 @@ Once you have created those fields go back to the **Gateway Configuration** and 
 
 Profit!
 
+### Planned Features
+---
+
+Feature | Description
+--- | ---
+Client Group | Ability to auto activate based on client groups, if user is in client group auto activate.
+Enter PO # | Ability to enter a Purchase Order number at the end of checking out which will be tied to the order.
+Credit Limit | Set a specific credit limit for a client, once they reach that limit they can no longer auto activate
+Available Credit | Field that shows the available credit left for the client
+
+Got an idea?  Add an issue here on GitHub!
+
 
 ### Screenshots
 ---
