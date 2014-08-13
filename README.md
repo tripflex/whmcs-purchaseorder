@@ -16,7 +16,15 @@ If you want to configure some other output in the right side of the invoice area
 There will be a dropdown for all custom client fields, select which one you want to use for the auto activate, and the approve to use Purchase Order.  These fields must be checkboxes.
 
 ### Screenshots
-![](screenshots/clientprofile.png)
+---
+
+
+Description | Screenshot
+--- | ---
+Purchase Order Gateway Configuration | ![](screenshots/gatewayconfig.png)
+Client Custom Fields | ![](screenshots/customclientfields.png)
+Client Profile Custom Fields | ![](screenshots/clientprofile.png)
+Invoice Page Output | ![](screenshots/invoicepage.png)
 
 ### `$params` values
 
